@@ -15,12 +15,21 @@ const CookieGame = () => {
   const { clicks, setClicks, clicksPerSecond, setClicksPerSecond } = useClickContext();
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [currentSecondClicks, setCurrentSecondClicks] = useState(0);
+  const [clickEffects, setClickEffects] = useState<{ x: number; y: number; id: number }[]>([]);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
+  const clickIdRef = useRef(0);
 
   const handleClick = (e: React.MouseEvent<HTMLImageElement>) => {
     setClicks((prevClicks) => prevClicks + 1);
     setCurrentSecondClicks((prevClicks) => prevClicks + 1);
     setClickPosition({ x: e.clientX, y: e.clientY });
+
+    const newClickEffect = { x: e.clientX, y: e.clientY, id: clickIdRef.current++ };
+    setClickEffects((prevEffects) => [...prevEffects, newClickEffect]);
+
+    setTimeout(() => {
+      setClickEffects((prevEffects) => prevEffects.filter((effect) => effect.id !== newClickEffect.id));
+    }, 500); 
   };
 
   useEffect(() => {
@@ -53,9 +62,9 @@ const CookieGame = () => {
             onClick={handleClick}
             style={{ cursor: "pointer" }}
           />
-          {clickPosition.x !== 0 && clickPosition.y !== 0 && (
-            <ClickEffect x={clickPosition.x} y={clickPosition.y} />
-          )}
+          {clickEffects.map((effect) => (
+            <ClickEffect key={effect.id} x={effect.x} y={effect.y} />
+          ))}
         </div>
         <div>
           <h2>Total Clicks: {clicks}</h2>

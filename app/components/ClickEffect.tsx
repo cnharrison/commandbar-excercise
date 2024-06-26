@@ -10,13 +10,12 @@ const ClickEffect = ({ x, y }: ClickEffectProps) => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setVisible(true);
     const timeout = setTimeout(() => {
       setVisible(false);
     }, 250);
 
     return () => clearTimeout(timeout);
-  }, [x, y]);
+  }, []);
 
   return visible ? (
     <div
@@ -27,7 +26,7 @@ const ClickEffect = ({ x, y }: ClickEffectProps) => {
         fontSize: "1.5rem",
         color: "#ff00ff",
         textShadow: "0 0 2px #000, 0 0 5px #000",
-        animation: "fadeInOut 0.5s ease-in-out",
+        animation: "explode 0.5s ease-in-out",
         pointerEvents: "none", 
       }}
     >
